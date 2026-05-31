@@ -11,56 +11,27 @@ Ce dépôt est divisé en deux parties pédagogiques distinctes :
 
 ---
 
-## Partie 1 — Docker pratique
+## Prérequis et démarrage
 
-> Voir [`docker-practice/README.md`](docker-practice/README.md) pour les instructions complètes.
-
-Tu vas écrire un Dockerfile minimaliste, construire une image, lancer un conteneur, puis faire le nettoyage.
-
----
-
-## Contexte des Pull Requests en TP
-
-Par défaut, la Pull Request est ouverte **dans ton fork** : la branche `feature/add-task-filter` est proposée vers `main` de ton dépôt forké.
-
-Si l'enseignant le demande explicitement, la Pull Request peut être ouverte vers le dépôt central `GVI2026/tp-github-flow`. Sans droit d'écriture ou sans accès GitHub disponible, le même raisonnement peut être simulé localement en comparant la branche de feature avec `main`, puis en expliquant le merge attendu.
-
----
-
-## Partie 2 — GitHub Flow
-
-### Objectif
-
-Implémenter la fonctionnalité manquante `GET /tasks?done=true` en suivant le GitHub Flow :
-
-1. Créer une branche `feature/add-task-filter` depuis `main`
-2. Implémenter le filtrage par statut
-3. Adapter les tests existants
-4. Pousser la branche et ouvrir une Pull Request
-5. Traiter les retours et fusionner dans `main`
-
-### Démarrage recommandé — DevContainer (Windows / Linux / macOS)
+### Démarrage recommandé — DevContainer
 
 **Prérequis** : [VS Code](https://code.visualstudio.com/) + [Docker Desktop](https://www.docker.com/products/docker-desktop/) + extension [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-1. Cloner le dépôt :
+1. Forker le dépôt, puis cloner votre fork :
    ```bash
-   git clone <url-du-repo>
+   git clone <url-du-fork>
    cd cours-02-github-flow-api
    ```
 
-2. Ouvrir dans VS Code et accepter "Reopen in Container" — ou via la palette de commandes : `Dev Containers: Reopen in Container`
+2. Ouvrir le dossier dans VS Code et accepter "Reopen in Container" — ou utiliser la palette de commandes : `Dev Containers: Reopen in Container`.
 
-3. Attendre l'initialisation (première fois ~2 min). Les dépendances npm et les migrations Prisma s'exécutent automatiquement.
+3. Attendre l'initialisation. La première ouverture peut prendre environ deux minutes.
 
-4. Lancer l'application :
-   ```bash
-   npm run start:dev
-   ```
+4. Exécuter les commandes du TP dans le terminal du DevContainer.
 
-5. Swagger disponible sur [http://localhost:3000/api](http://localhost:3000/api)
+### Démarrage manuel
 
-### Démarrage manuel (sans DevContainer)
+Le DevContainer est le mode attendu pour ce TP. Le démarrage manuel n'est utile qu'en dépannage.
 
 **Prérequis** : Node.js 24, PostgreSQL 18
 
@@ -85,13 +56,60 @@ Implémenter la fonctionnalité manquante `GET /tasks?done=true` en suivant le G
    npm run start:dev
    ```
 
-### Lancer les tests
+---
+
+## Partie 1 — Docker pratique
+
+> Voir [`docker-practice/README.md`](docker-practice/README.md) pour les instructions complètes.
+
+Cette partie se fait dans le DevContainer, sur une branche dédiée :
 
 ```bash
-npm test
+git checkout main
+git pull
+git checkout -b feature/docker-practice
 ```
 
-### Routes disponibles
+Tu vas écrire un Dockerfile minimaliste, construire une image, lancer un conteneur, puis faire le nettoyage.
+
+---
+
+## Partie 2 — GitHub Flow
+
+### Objectif
+
+Implémenter la fonctionnalité manquante `GET /tasks?done=true` et `GET /tasks?done=false` en suivant le GitHub Flow.
+
+Le query param `done` est obligatoire pour cet exercice. C'est un booléen transmis sous forme de chaîne dans l'URL :
+
+- `done=true` retourne uniquement les tâches terminées ;
+- `done=false` retourne uniquement les tâches non terminées.
+
+### Flux attendu
+
+1. Revenir sur `main` et récupérer la dernière version.
+2. Créer une branche `feature/add-task-filter` depuis `main`.
+3. Implémenter le filtrage booléen dans `TasksService` et `TasksController`.
+4. Adapter les tests existants.
+5. Vérifier que les tests passent avec `npm test`.
+6. Committer avec un message Conventional Commits.
+7. Pousser la branche et ouvrir une Pull Request.
+8. Traiter les retours de relecture.
+9. Fusionner la Pull Request dans `main`.
+10. Vérifier que `main` reste fonctionnelle après la fusion.
+11. Depuis l'interface web GitHub, créer une release manuelle en renseignant un tag basé sur `main`, avec un titre et des notes de version. GitHub créera le tag au moment de publier la release.
+
+---
+
+## Contexte des Pull Requests en TP
+
+Par défaut, la Pull Request est ouverte **dans ton fork** : la branche `feature/add-task-filter` est proposée vers `main` de ton dépôt forké.
+
+Si l'enseignant le demande explicitement, la Pull Request peut être ouverte vers le dépôt central `GVI2026/tp-github-flow`. Sans droit d'écriture ou sans accès GitHub disponible, le même raisonnement peut être simulé localement en comparant la branche de feature avec `main`, puis en expliquant le merge attendu.
+
+---
+
+## Routes disponibles
 
 | Méthode | Route | Description |
 |---|---|---|
@@ -100,7 +118,22 @@ npm test
 | `GET` | `/tasks/:id` | Récupérer une tâche |
 | `PATCH` | `/tasks/:id` | Mettre à jour une tâche |
 | `DELETE` | `/tasks/:id` | Supprimer une tâche |
-| `GET` | `/tasks?done=true` | ⚠️ **À implémenter** — filtrer par statut |
+| `GET` | `/tasks?done=true` | ⚠️ **À implémenter** — filtrer les tâches terminées |
+| `GET` | `/tasks?done=false` | ⚠️ **À implémenter** — filtrer les tâches non terminées |
+
+Swagger est disponible sur [http://localhost:3000/api](http://localhost:3000/api) après lancement de l'application :
+
+```bash
+npm run start:dev
+```
+
+---
+
+## Tests
+
+```bash
+npm test
+```
 
 ---
 
@@ -110,5 +143,4 @@ Une fois la Partie 2 terminée, tu peux implémenter la **pagination** sur `GET 
 
 Exemple : `GET /tasks?page=1&limit=10`
 
-Même démarche : nouvelle branche `feature/add-pagination`, Pull Request, merge.
-
+Même démarche : nouvelle branche `feature/add-pagination`, Pull Request, merge, puis release manuelle si l'enseignant le demande.

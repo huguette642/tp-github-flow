@@ -1,7 +1,7 @@
 # Partie 1 — Pratique Docker
 
 > **Durée estimée : 25 min**  
-> Cette partie est indépendante du reste du projet. Elle se fait entièrement dans ce répertoire `docker-practice/`.
+> Cette partie est indépendante du reste du projet. Elle se fait entièrement dans ce répertoire `docker-practice/`, depuis le DevContainer du dépôt.
 
 ---
 
@@ -10,6 +10,16 @@
 Le fichier `index.js` est un serveur HTTP minimaliste en Node.js pur (aucune dépendance). Il répond `Hello depuis Docker !` sur le port 3001.
 
 Ton travail : écrire un `Dockerfile` pour le conteneuriser, puis manipuler les commandes fondamentales de Docker.
+
+Avant de modifier le Dockerfile, ouvre le dépôt dans son DevContainer et crée une branche dédiée :
+
+```bash
+git checkout main
+git pull
+git checkout -b feature/docker-practice
+```
+
+Toutes les commandes Docker de cette partie doivent être exécutées dans le terminal du DevContainer.
 
 ---
 
@@ -117,6 +127,15 @@ docker image ls
 ```
 
 L'image `hello-docker` ne doit plus apparaître.
+
+---
+
+### 12 — Committer le travail Docker
+
+```bash
+git add Dockerfile
+git commit -m "chore: complete docker practice"
+```
 
 ---
 
