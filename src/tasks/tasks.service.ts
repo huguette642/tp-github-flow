@@ -14,11 +14,21 @@ export class TasksService {
     });
   }
 
-  async findAll(): Promise<Task[]> {
-    return this.prisma.task.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
+  findAll(done?: boolean) {
+  // Si vous utilisez une base de données (Exemple avec un ORM fictif) :
+  if (done !== undefined) {
+    return this.prisma.task.findMany({ where: { done } });
+    // OU avec TypeORM : return this.taskRepository.find({ where: { done } });
   }
+  return this.prisma.task.findMany();
+
+  /* Si vous utilisez un tableau en mémoire (Mock) :
+  if (done !== undefined) {
+    return this.tasks.filter(task => task.done === done);
+  }
+  return this.tasks;
+  */
+}
 
   async findOne(id: number): Promise<Task> {
     const task = await this.prisma.task.findUnique({ where: { id } });

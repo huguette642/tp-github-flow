@@ -12,6 +12,8 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { Query, ParseBoolPipe } from '@nestjs/common'; // ⚠️ N'oubliez pas d'importer Query et ParseBoolPipe en haut de votre fichier
+import { ApiQuery } from '@nestjs/swagger'; // ⚠️ Importez ApiQuery de @nestjs/swagger
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -25,11 +27,12 @@ export class TasksController {
     return this.tasksService.create(createTaskDto);
   }
 
-  @ApiOperation({ summary: 'Récupérer toutes les tâches' })
+  @ApiOperation({ summary: 'Récupérer toutes les tâches (optionnellement filtrées par statut)' })
   @ApiResponse({ status: 200, description: 'Liste des tâches' })
+  @ApiQuery({ name: 'done', required: false, type: Boolean, description: 'Filtrer par statut de complétion' })
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(@Query('done', new ParseBoolPipe({ errorHttpStatusCode: 400 })) done?: boolean) {
+    return this.tasksService.findAll(done);
   }
 
   @ApiOperation({ summary: 'Récupérer une tâche par ID' })
